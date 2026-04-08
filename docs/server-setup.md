@@ -12,6 +12,16 @@
 
 The IP address is stored in `secrets.env` (not committed to git).
 
+## DNS Records
+
+| Record | Type | Value |
+|--------|------|-------|
+| `matrix-new.windreserve.de` | A | 91.99.184.79 |
+| `element-new.windreserve.de` | A | 91.99.184.79 |
+| `turn-new.windreserve.de` | A | 91.99.184.79 |
+
+DNS managed via Strato.
+
 ## Installed Software
 
 - Docker 29.4.0
