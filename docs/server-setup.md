@@ -187,3 +187,47 @@ nc -zu turn.windreserve.de 3478
 
 # Test in Element: start a voice/video call between two users
 ```
+
+## Security Hardening
+
+The server has the following security measures in place:
+
+### SSH Security
+- Root login: Key-only (`PermitRootLogin prohibit-password`)
+- Password authentication: Disabled for root
+
+### Fail2ban
+Installed and configured to protect SSH from brute-force attacks:
+```bash
+# Check status
+fail2ban-client status sshd
+
+# View banned IPs
+fail2ban-client status sshd | grep "Banned IP"
+```
+
+Configuration in `/etc/fail2ban/jail.local`:
+- Ban time: 1 hour
+- Max retries: 5
+- Backend: systemd
+
+### HTTP Security Headers
+Both `matrix.windreserve.de` and `element.windreserve.de` include:
+- `Strict-Transport-Security` (HSTS)
+- `X-Frame-Options`
+- `X-Content-Type-Options`
+- `X-XSS-Protection`
+- `Referrer-Policy`
+
+### Firewall
+Hetzner Cloud Firewall (`Firewall-Matrix`) configured with:
+- SSH (22/TCP)
+- HTTP/HTTPS (80, 443/TCP)
+- TURN (3478, 5349 TCP/UDP)
+- TURN Media (49152-49200/UDP)
+
+### File Permissions
+- `.env` file: `chmod 600` (root only)
+
+### Automatic Updates
+- `unattended-upgrades` installed for automatic security updates
