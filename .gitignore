@@ -1,5 +1,6 @@
 # Dependencies
 .env
+secrets.env
 
 # Data directories (created at runtime)
 data/
