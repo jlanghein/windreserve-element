@@ -1,5 +1,5 @@
 server_name: "matrix.windreserve.de"
-public_baseurl: "https://matrix-new.windreserve.de/"
+public_baseurl: "https://matrix.windreserve.de/"
 pid_file: /data/homeserver.pid
 report_stats: false
 
@@ -53,7 +53,7 @@ turn_user_lifetime: 86400000
 turn_allow_guests: false
 
 # Web client location
-web_client_location: "https://element-new.windreserve.de/"
+web_client_location: "https://element.windreserve.de/"
 
 # Privacy settings (keep internal)
 allow_profile_lookup_over_federation: false
