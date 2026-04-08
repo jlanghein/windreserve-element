@@ -21,6 +21,8 @@ This guide covers migrating from the old oxygen-based Matrix setup to the new He
 
 ## Step 1: Export from Old Server
 
+**Status: COMPLETED** (2026-04-08)
+
 SSH to the old Synapse server (10.25.10.64):
 
 ```bash
@@ -36,6 +38,16 @@ sudo tar -czf /tmp/synapse_media.tar.gz -C /var/lib/matrix-synapse media/
 # Set permissions for transfer
 sudo chmod 644 /tmp/synapse_backup.sql /tmp/homeserver.signing.key /tmp/synapse_media.tar.gz
 ```
+
+### Exported Files
+
+| File | Size | Description |
+|------|------|-------------|
+| `/tmp/synapse_backup.sql` | 42 MB | PostgreSQL database (includes all users) |
+| `/tmp/homeserver.signing.key` | 59 B | Server signing key (CRITICAL) |
+| `/tmp/synapse_media.tar.gz` | 1022 MB | Media files (uploads, avatars, etc.) |
+
+**Note:** The database export includes all Matrix user accounts. Since we're moving away from LDAP, existing users will need new local passwords set after migration.
 
 ## Step 2: Transfer to New Server
 
