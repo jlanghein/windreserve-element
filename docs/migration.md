@@ -15,8 +15,9 @@ This guide covers migrating from the old oxygen-based Matrix setup to the new He
 
 - [x] New Hetzner VM provisioned
 - [x] DNS records created (matrix-new, element-new, turn-new) → 91.99.184.79
-- [ ] Docker and docker-compose installed
-- [ ] Firewall rules configured (80, 443, 3478, 5349)
+- [x] Docker and docker-compose installed
+- [x] Firewall rules configured (80, 443, 3478, 5349)
+- [x] Docker Compose stack deployed and verified
 
 ## Step 1: Export from Old Server
 
