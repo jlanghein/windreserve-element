@@ -13,8 +13,8 @@ This guide covers migrating from the old oxygen-based Matrix setup to the new He
 
 ## Pre-Migration Checklist
 
-- [ ] New Hetzner VM provisioned
-- [ ] DNS records created (matrix-new, element-new)
+- [x] New Hetzner VM provisioned
+- [x] DNS records created (matrix-new, element-new, turn-new) → 91.99.184.79
 - [ ] Docker and docker-compose installed
 - [ ] Firewall rules configured (80, 443, 3478, 5349)
 
