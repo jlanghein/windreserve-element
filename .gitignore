@@ -1,6 +1,8 @@
 # Dependencies
 .env
 secrets.env
+element-secrets.env
+matrix-user-credentials.env
 
 # Data directories (created at runtime)
 data/

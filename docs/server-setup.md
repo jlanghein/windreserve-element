@@ -5,20 +5,19 @@
 | Property | Value |
 |----------|-------|
 | Hostname | matrix-new |
+| IP Address | 91.99.184.79 |
 | Type | CX21 (2 vCPU, 4GB RAM, 40GB SSD) |
 | OS | Debian 12 |
 | Location | Hetzner Cloud |
 | Cost | ~€4.85/month |
 
-The IP address is stored in `secrets.env` (not committed to git).
-
 ## DNS Records
 
 | Record | Type | Value |
 |--------|------|-------|
-| `matrix-new.windreserve.de` | A | 91.99.184.79 |
-| `element-new.windreserve.de` | A | 91.99.184.79 |
-| `turn-new.windreserve.de` | A | 91.99.184.79 |
+| `matrix.windreserve.de` | A | 91.99.184.79 |
+| `element.windreserve.de` | A | 91.99.184.79 |
+| `turn.windreserve.de` | A | 91.99.184.79 |
 
 DNS managed via Strato.
 
@@ -27,6 +26,7 @@ DNS managed via Strato.
 - Docker 29.4.0
 - Docker Compose 5.1.1
 - Git 2.39.5
+- jq (for JSON parsing)
 
 ## Docker Compose Stack
 
@@ -45,8 +45,8 @@ The stack is deployed at `/root/windreserve-element` on the VM.
 
 | URL | Service |
 |-----|---------|
-| https://matrix-new.windreserve.de | Synapse (Matrix API) |
-| https://element-new.windreserve.de | Element Web client |
+| https://matrix.windreserve.de | Synapse (Matrix API) |
+| https://element.windreserve.de | Element Web client |
 
 ### Configuration Files
 
@@ -54,10 +54,16 @@ The stack is deployed at `/root/windreserve-element` on the VM.
 |------|---------|
 | `.env` | Environment variables (passwords, domains) |
 | `synapse/homeserver.yaml` | Synapse configuration |
-| `synapse/log.config` | Synapse logging configuration |
+| `synapse/log.yaml` | Synapse logging configuration |
 | `caddy/Caddyfile` | Caddy reverse proxy rules |
 | `coturn/turnserver.conf` | TURN server configuration |
 | `element/config.json` | Element Web client configuration |
+
+### Key Configuration Details
+
+- **server_name**: `matrix.windreserve.de` (cannot be changed - all user IDs use this)
+- **public_baseurl**: `https://matrix.windreserve.de/`
+- **Element default server**: `https://matrix.windreserve.de`
 
 ### Data Directories
 
@@ -90,6 +96,28 @@ docker compose down
 
 # Start all services
 docker compose up -d
+
+# Check Synapse health
+curl -s https://matrix.windreserve.de/_matrix/client/versions
+```
+
+### Admin Commands
+
+```bash
+# Get admin token (run on server)
+docker compose exec synapse curl -s -X POST http://localhost:8008/_matrix/client/r0/login \
+    -H "Content-Type: application/json" \
+    -d '{"type": "m.login.password", "user": "synapse-admin", "password": "PASSWORD"}'
+
+# Set user password (replace TOKEN and username)
+docker compose exec synapse curl -s -X PUT \
+    "http://localhost:8008/_synapse/admin/v2/users/@username:matrix.windreserve.de" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer TOKEN" \
+    -d '{"password": "new_password"}'
+
+# List users
+docker compose exec postgres psql -U synapse -d synapse -c "SELECT name FROM users ORDER BY name;"
 ```
 
 ## Firewall Rules
@@ -113,6 +141,13 @@ source secrets.env
 ssh root@$SERVER_IP
 ```
 
-## Next Steps
+## Credential Storage
 
-See [migration.md](migration.md) for the full migration process.
+- **secrets.env** - Server IPs and old server credentials (gitignored)
+- **element-secrets.env** - Matrix user passwords and security keys (gitignored)
+
+Both files are listed in `.gitignore` and should never be committed.
+
+## Related Documentation
+
+- [Migration Guide](migration.md) - Full migration process from old server
