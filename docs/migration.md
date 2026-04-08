@@ -198,6 +198,8 @@ If something goes wrong:
 | SSL certificates | Completed (Let's Encrypt via Caddy) |
 | Old Synapse stopped | Completed |
 | User passwords set | Partial (7 users + bots done, 25 pending) |
+| TURN server configured | Completed |
+| Voice/video calls | Tested and working |
 
 ## Endpoints
 
@@ -205,10 +207,10 @@ If something goes wrong:
 |-----|---------|
 | https://matrix.windreserve.de | Synapse (Matrix API) |
 | https://element.windreserve.de | Element Web client |
+| turn.windreserve.de:3478 | TURN server (UDP/TCP) |
+| turn.windreserve.de:5349 | TURNS server (TLS) |
 
 ## Next Steps
 
 1. Set passwords for remaining users as needed
-2. Configure TURN server for voice/video calls (Issue #6)
-3. Test voice/video functionality (Issue #7)
-4. Decommission old server after verification period (Issue #8)
+2. Decommission old server after verification period (Issue #9)

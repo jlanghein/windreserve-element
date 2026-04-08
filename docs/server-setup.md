@@ -64,6 +64,7 @@ The stack is deployed at `/root/windreserve-element` on the VM.
 - **server_name**: `matrix.windreserve.de` (cannot be changed - all user IDs use this)
 - **public_baseurl**: `https://matrix.windreserve.de/`
 - **Element default server**: `https://matrix.windreserve.de`
+- **TURN server**: `turn.windreserve.de` (for voice/video calls)
 
 ### Data Directories
 
@@ -151,3 +152,38 @@ Both files are listed in `.gitignore` and should never be committed.
 ## Related Documentation
 
 - [Migration Guide](migration.md) - Full migration process from old server
+
+## TURN Server (Voice/Video Calls)
+
+The coturn TURN server enables voice and video calls between users, especially when they are behind NAT.
+
+### Configuration
+
+Key settings in `coturn/turnserver.conf`:
+- `external-ip=91.99.184.79` - Required for NAT traversal
+- `static-auth-secret` - Must match Synapse's `turn_shared_secret`
+- `realm=turn.windreserve.de`
+
+Synapse settings in `homeserver.yaml`:
+```yaml
+turn_uris:
+  - "turn:turn.windreserve.de:3478?transport=udp"
+  - "turn:turn.windreserve.de:3478?transport=tcp"
+  - "turns:turn.windreserve.de:5349?transport=tcp"
+turn_shared_secret: "SECRET_FROM_ENV"
+turn_user_lifetime: 86400000
+```
+
+### Deployment Note
+
+The `coturn/turnserver.conf` in the repo contains a placeholder for the secret. On deployment, replace `REPLACE_WITH_TURN_SECRET` with the actual value from `.env` `TURN_SECRET`.
+
+### Testing TURN
+
+```bash
+# Check ports are open
+nc -zv turn.windreserve.de 3478
+nc -zu turn.windreserve.de 3478
+
+# Test in Element: start a voice/video call between two users
+```
