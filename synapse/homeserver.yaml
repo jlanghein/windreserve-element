@@ -1,6 +1,7 @@
 server_name: "matrix-new.windreserve.de"
 public_baseurl: "https://matrix-new.windreserve.de/"
 pid_file: /data/homeserver.pid
+report_stats: false
 
 listeners:
   - port: 8008
@@ -23,7 +24,7 @@ database:
     cp_min: 5
     cp_max: 10
 
-log_config: "/data/log.yaml"
+log_config: "/data/log.config"
 media_store_path: /data/media_store
 signing_key_path: "/data/keys/signing.key"
 trusted_key_servers:

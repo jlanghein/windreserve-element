@@ -1,10 +1,8 @@
+version: 1
+
+disable_existing_loggers: false
+
 handlers:
-  file:
-    class: logging.handlers.TimedRotatingFileHandler
-    filename: /data/homeserver.log
-    when: midnight
-    backupCount: 7
-    encoding: utf8
   console:
     class: logging.StreamHandler
     formatter: precise

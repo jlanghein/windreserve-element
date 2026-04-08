@@ -15,6 +15,7 @@ services:
     environment:
       - DOMAIN_MATRIX=${DOMAIN_MATRIX}
       - DOMAIN_ELEMENT=${DOMAIN_ELEMENT}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
     depends_on:
       - synapse
     networks:
@@ -46,9 +47,10 @@ services:
     environment:
       SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
     volumes:
-      - ./synapse:/data:ro
+      - ./synapse/homeserver.yaml:/data/homeserver.yaml:ro
+      - ./synapse/log.config:/data/log.config:ro
       - synapse_media:/data/media_store
-      - synapse_signing_key:/data/keys
+      - ./data/synapse-keys:/data/keys
     depends_on:
       postgres:
         condition: service_healthy
