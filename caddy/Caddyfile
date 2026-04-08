@@ -1,0 +1,54 @@
+# Global options
+{
+	email {$ADMIN_EMAIL}
+}
+
+# Element web client
+{$DOMAIN_ELEMENT} {
+	root * /srv/element
+	file_server
+
+	header {
+		# Security headers
+		X-Frame-Options "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		X-XSS-Protection "1; mode=block"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
+	# Handle config.json
+	handle /config.json {
+		file_server
+	}
+}
+
+# Matrix Synapse homeserver
+{$DOMAIN_MATRIX} {
+	# Client-Server API
+	handle /_matrix/* {
+		reverse_proxy synapse:8008
+	}
+
+	# Server-Server (Federation) API
+	handle /_synapse/* {
+		reverse_proxy synapse:8008
+	}
+
+	# Well-known for federation
+	handle /.well-known/matrix/server {
+		header Content-Type application/json
+		respond `{"m.server": "{$DOMAIN_MATRIX}:443"}`
+	}
+
+	# Well-known for clients
+	handle /.well-known/matrix/client {
+		header Content-Type application/json
+		header Access-Control-Allow-Origin *
+		respond `{"m.homeserver": {"base_url": "https://{$DOMAIN_MATRIX}"}, "m.identity_server": {"base_url": "https://vector.im"}}`
+	}
+
+	# Redirect root to Element
+	handle / {
+		redir https://{$DOMAIN_ELEMENT} permanent
+	}
+}

@@ -1,0 +1,82 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./element:/srv/element:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - DOMAIN_MATRIX=${DOMAIN_MATRIX}
+      - DOMAIN_ELEMENT=${DOMAIN_ELEMENT}
+    depends_on:
+      - synapse
+    networks:
+      - matrix
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: synapse
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U synapse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - matrix
+
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: synapse
+    restart: unless-stopped
+    environment:
+      SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
+    volumes:
+      - ./synapse:/data:ro
+      - synapse_media:/data/media_store
+      - synapse_signing_key:/data/keys
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - matrix
+
+  coturn:
+    image: coturn/coturn:latest
+    container_name: coturn
+    restart: unless-stopped
+    ports:
+      - "3478:3478"
+      - "3478:3478/udp"
+      - "5349:5349"
+      - "5349:5349/udp"
+      - "49152-49200:49152-49200/udp"
+    volumes:
+      - ./coturn/turnserver.conf:/etc/turnserver.conf:ro
+    networks:
+      - matrix
+
+volumes:
+  postgres_data:
+  synapse_media:
+  synapse_signing_key:
+  caddy_data:
+  caddy_config:
+
+networks:
+  matrix:
+    driver: bridge

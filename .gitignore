@@ -1,0 +1,24 @@
+# Dependencies
+.env
+
+# Data directories (created at runtime)
+data/
+
+# Backup files
+*.sql
+*.tar.gz
+*.backup
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log
