@@ -51,6 +51,8 @@ sudo chmod 644 /tmp/synapse_backup.sql /tmp/homeserver.signing.key /tmp/synapse_
 
 ## Step 2: Transfer to New Server
 
+**Status: COMPLETED** (2026-04-08)
+
 From your local machine or new server:
 
 ```bash
@@ -62,6 +64,8 @@ scp windadmin@10.25.10.64:/tmp/synapse_media.tar.gz ./
 
 ## Step 3: Import to New Server
 
+**Status: COMPLETED** (2026-04-08)
+
 On the new Hetzner VM:
 
 ```bash
@@ -69,20 +73,29 @@ On the new Hetzner VM:
 docker compose up -d postgres
 sleep 10
 
-# Import database
+# Drop existing schema and import database
+docker compose exec -T postgres psql -U synapse -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'
 cat synapse_backup.sql | docker compose exec -T postgres psql -U synapse synapse
 
-# Copy signing key to synapse volume
-docker compose run --rm -v $(pwd)/homeserver.signing.key:/tmp/signing.key synapse \
-    cp /tmp/signing.key /data/keys/signing.key
+# Copy signing key
+cp homeserver.signing.key data/synapse-keys/signing.key
+chown 991:991 data/synapse-keys/signing.key
 
-# Extract media files
-mkdir -p ./data/synapse-media
-tar -xzf synapse_media.tar.gz -C ./data/synapse-media --strip-components=1
+# Extract media files to docker volume
+tar -xzf synapse_media.tar.gz
+docker run --rm -v windreserve-element_synapse_media:/data/media_store -v $(pwd)/media:/media alpine \
+    sh -c 'cp -r /media/* /data/media_store/ && chown -R 991:991 /data/media_store'
 
 # Start all services
 docker compose up -d
 ```
+
+### Important: server_name Configuration
+
+The `server_name` in homeserver.yaml MUST remain `matrix.windreserve.de` (not `matrix-new.windreserve.de`) because:
+- All existing users have IDs like `@user:matrix.windreserve.de`
+- Synapse prevents changing server_name after initial setup
+- The server_name is the permanent identity, separate from the serving URL
 
 ## Step 4: Verify Migration
 

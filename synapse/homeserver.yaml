@@ -1,4 +1,4 @@
-server_name: "matrix-new.windreserve.de"
+server_name: "matrix.windreserve.de"
 public_baseurl: "https://matrix-new.windreserve.de/"
 pid_file: /data/homeserver.pid
 report_stats: false
