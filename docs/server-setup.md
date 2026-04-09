@@ -13,13 +13,19 @@
 
 ## DNS Records
 
-| Record | Type | Value |
-|--------|------|-------|
-| `matrix.windreserve.de` | A | 91.99.184.79 |
-| `element.windreserve.de` | A | 91.99.184.79 |
-| `turn.windreserve.de` | A | 91.99.184.79 |
+| Record | Type | Value | Managed By |
+|--------|------|-------|------------|
+| `matrix.windreserve.de` | A | 91.99.184.79 | UCS (internal) + Strato (external) |
+| `element.windreserve.de` | A | 91.99.184.79 | UCS (internal) + Strato (external) |
+| `turn.windreserve.de` | A | 91.99.184.79 | UCS (internal) + Strato (external) |
 
-DNS managed via Strato.
+### DNS Management
+
+**External DNS** is managed via Strato for public internet resolution.
+
+**Internal DNS** is managed via Univention Corporate Server (UCS) at `dc-a.windreserve.de` (10.25.10.43). This is required for WindReserve internal network clients to resolve these domains.
+
+See [UCS DNS Management](#ucs-dns-management) section below for CLI commands.
 
 ## Installed Software
 
@@ -231,3 +237,100 @@ Hetzner Cloud Firewall (`Firewall-Matrix`) configured with:
 
 ### Automatic Updates
 - `unattended-upgrades` installed for automatic security updates
+
+## UCS DNS Management
+
+The WindReserve internal network uses Univention Corporate Server (UCS) for DNS. Clients on the internal network (10.25.x.x) resolve domains via the UCS DNS servers.
+
+### UCS Server Details
+
+| Property | Value |
+|----------|-------|
+| Hostname | dc-a.windreserve.de |
+| IP Address | 10.25.10.43 |
+| Type | Univention Corporate Server 5.2 |
+| Role | Primary DNS server for windreserve.de zone |
+
+### SSH Access
+
+```bash
+# Load credentials
+source secrets.env
+ssh $UCS_USER@$UCS_HOST
+```
+
+### DNS CLI Commands
+
+UCS uses `univention-directory-manager` (udm) for DNS management. The full path is `/usr/sbin/univention-directory-manager`.
+
+#### List DNS Zones
+
+```bash
+/usr/sbin/univention-directory-manager dns/forward_zone list
+```
+
+#### List Host Records
+
+```bash
+# List all A records in windreserve.de zone
+/usr/sbin/univention-directory-manager dns/host_record list \
+  --superordinate "zoneName=windreserve.de,cn=dns,dc=windreserve,dc=de"
+```
+
+#### Create Host Record (A Record)
+
+```bash
+# Add a new A record
+/usr/sbin/univention-directory-manager dns/host_record create \
+  --superordinate "zoneName=windreserve.de,cn=dns,dc=windreserve,dc=de" \
+  --set name=hostname \
+  --set a=192.168.1.100
+```
+
+#### Modify Host Record
+
+```bash
+# Update an existing A record
+/usr/sbin/univention-directory-manager dns/host_record modify \
+  --dn "relativeDomainName=hostname,zoneName=windreserve.de,cn=dns,dc=windreserve,dc=de" \
+  --set a=192.168.1.101
+```
+
+#### Delete Host Record
+
+```bash
+# Remove an A record
+/usr/sbin/univention-directory-manager dns/host_record remove \
+  --dn "relativeDomainName=hostname,zoneName=windreserve.de,cn=dns,dc=windreserve,dc=de"
+```
+
+### Matrix/Element DNS Records
+
+The following records were added for internal DNS resolution:
+
+```bash
+# matrix.windreserve.de -> 91.99.184.79
+/usr/sbin/univention-directory-manager dns/host_record create \
+  --superordinate "zoneName=windreserve.de,cn=dns,dc=windreserve,dc=de" \
+  --set name=matrix \
+  --set a=91.99.184.79
+
+# element.windreserve.de -> 91.99.184.79
+/usr/sbin/univention-directory-manager dns/host_record create \
+  --superordinate "zoneName=windreserve.de,cn=dns,dc=windreserve,dc=de" \
+  --set name=element \
+  --set a=91.99.184.79
+```
+
+### Verify DNS Resolution
+
+From any internal host (e.g., 10.25.10.104):
+
+```bash
+# Check DNS resolution
+host matrix.windreserve.de
+host element.windreserve.de
+
+# Test HTTPS connectivity
+curl -s https://matrix.windreserve.de/_matrix/client/versions
+```
