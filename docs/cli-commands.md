@@ -14,7 +14,7 @@ Creates a new Matrix user with a display name.
 ./scripts/create-user.sh <username> <password> <display_name>
 
 # Example
-./scripts/create-user.sh s.conradi 's!4-czhTxFjZrJK' 'Stefan Conradi'
+./scripts/create-user.sh j.doe 'SecurePassword123' 'John Doe'
 ```
 
 After creating a user, add their credentials to `element-secrets.env`:
@@ -30,8 +30,8 @@ Adds an existing user to a Matrix room.
 ```bash
 ./scripts/add-user-to-room.sh <username> <room_id>
 
-# Example - add to Unternehmenschat
-./scripts/add-user-to-room.sh s.conradi '!xRqgUseDmVmggAjfkp:matrix.windreserve.de'
+# Example - add to a room (use ./scripts/list-rooms.sh to find room IDs)
+./scripts/add-user-to-room.sh j.doe '!roomid:matrix.windreserve.de'
 ```
 
 Common room IDs are defined in `element-secrets.env` as `ROOM_*` variables.
