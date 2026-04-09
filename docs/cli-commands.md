@@ -2,6 +2,56 @@
 
 Quick reference for common administrative tasks on the Matrix/Synapse server.
 
+## Local Scripts
+
+Helper scripts are available in the `scripts/` directory. Run from the project root.
+
+### Create User
+
+Creates a new Matrix user with a display name.
+
+```bash
+./scripts/create-user.sh <username> <password> <display_name>
+
+# Example
+./scripts/create-user.sh s.conradi 's!4-czhTxFjZrJK' 'Stefan Conradi'
+```
+
+After creating a user, add their credentials to `element-secrets.env`:
+```
+username=password
+username_security_key=PLACEHOLDER
+```
+
+### Add User to Room
+
+Adds an existing user to a Matrix room.
+
+```bash
+./scripts/add-user-to-room.sh <username> <room_id>
+
+# Example - add to Unternehmenschat
+./scripts/add-user-to-room.sh s.conradi '!xRqgUseDmVmggAjfkp:matrix.windreserve.de'
+```
+
+Common room IDs are defined in `element-secrets.env` as `ROOM_*` variables.
+
+### List Rooms
+
+Lists all rooms with their IDs and member counts.
+
+```bash
+./scripts/list-rooms.sh
+```
+
+### List Users
+
+Lists all users with their display names.
+
+```bash
+./scripts/list-users.sh
+```
+
 ## SSH Access
 
 ```bash
