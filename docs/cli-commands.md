@@ -6,6 +6,44 @@ Quick reference for common administrative tasks on the Matrix/Synapse server.
 
 Helper scripts are available in the `scripts/` directory. Run from the project root.
 
+### Create Wind Farm Space
+
+Creates a wind farm space with turbine rooms and auto-joins all users.
+
+```bash
+./scripts/create-wind-farm-space.sh "<wind_farm_name>" "<turbine_list>"
+
+# Example - create Vahlbruch with 3 turbines
+./scripts/create-wind-farm-space.sh "Vahlbruch" "01:51089 02:51076 03:51074"
+```
+
+The turbine list format is `anlage_nr:serial_nr` pairs separated by spaces.
+
+### Rename Room
+
+Renames an existing Matrix room.
+
+```bash
+./scripts/rename-room.sh "<room_id>" "<new_name>"
+
+# Example
+./scripts/rename-room.sh "!abc123:matrix.windreserve.de" "01 - 12345"
+```
+
+### Delete Room
+
+Deletes a Matrix room (with confirmation prompt).
+
+```bash
+./scripts/delete-room.sh "<room_id>"
+
+# Skip confirmation
+./scripts/delete-room.sh -f "<room_id>"
+
+# Example
+./scripts/delete-room.sh "!abc123:matrix.windreserve.de"
+```
+
 ### Create User
 
 Creates a new Matrix user with a display name.

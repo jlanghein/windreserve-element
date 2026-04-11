@@ -64,8 +64,19 @@ See [docs/migration.md](docs/migration.md) for migrating from the old oxygen-bas
 │   └── config.json        # Element web client config
 ├── coturn/
 │   └── turnserver.conf    # TURN server config
-└── docs/
-    └── migration.md       # Migration guide
+├── scripts/               # CLI management scripts
+│   ├── create-wind-farm-space.sh  # Create space with turbine rooms
+│   ├── rename-room.sh             # Rename a room
+│   ├── delete-room.sh             # Delete a room
+│   ├── create-user.sh             # Create new user
+│   ├── add-user-to-room.sh        # Add user to room
+│   ├── list-rooms.sh              # List all rooms
+│   └── list-users.sh              # List all users
+├── docs/
+│   ├── cli-commands.md    # CLI reference
+│   ├── migration.md       # Migration guide
+│   └── server-setup.md    # Server setup guide
+└── private/               # Wind farm data (gitignored)
 ```
 
 ## Maintenance
