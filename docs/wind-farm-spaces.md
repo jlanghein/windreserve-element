@@ -13,8 +13,10 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!NqlWVLFuWKMyQSyKAo:matrix.windreserve.de`
-
-> Note: Turbine rooms not yet linked to space
+- **BA3 - 1300-719-03**: `!rkZcKdoXRGnPcqlJzw:matrix.windreserve.de`
+- **BA4 - 1300-717-04**: `!UuOUYmuYeLpBdwSMej:matrix.windreserve.de`
+- **BA7 - 1300-720-07**: `!WsnmUsEIpkCvSGwmHI:matrix.windreserve.de`
+- **BA8 - 1300-726-08**: `!LgsgsluueAJevPttvj:matrix.windreserve.de`
 
 ---
 
@@ -53,8 +55,6 @@ Generated: 2026-04-11
 
 - **Anlagenzugang | Wind Farm Access**: `!DixeBgNlndDRMZSMxj:matrix.windreserve.de`
 
-> Note: Turbine rooms not yet linked to space
-
 ---
 
 ## Flechtdorf-Helmscheidt
@@ -82,8 +82,6 @@ Generated: 2026-04-11
 
 - **Anlagenzugang | Wind Farm Access**: `!MuXxllaXRynximdUNH:matrix.windreserve.de`
 
-> Note: Turbine rooms not yet linked to space
-
 ---
 
 ## Frehne West
@@ -93,8 +91,9 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!MELaDzDBpHYrnytvUl:matrix.windreserve.de`
-
-> Note: Turbine rooms not yet linked to space
+- **FW1 - 48099**: `!VaXRtZvuIHJRHXdKpn:matrix.windreserve.de`
+- **FW2 - 48101**: `!EXZCEerdWCVdUPKMoP:matrix.windreserve.de`
+- **FW3 - 48100**: `!TwPbxhIYFafLDTszgZ:matrix.windreserve.de`
 
 ---
 
@@ -130,8 +129,12 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!OMwzIYZPKOMNamjNSS:matrix.windreserve.de`
-
-> Note: Turbine rooms not yet linked to space
+- **HAN2 - 15560489**: `!JeIIMdExBEETFCRLYl:matrix.windreserve.de`
+- **HAN5 - 15560491**: `!AlWzTXxhHGjaDikzyy:matrix.windreserve.de`
+- **HAN6 - 15560488**: `!GOWcYtmtnDlgSsImHI:matrix.windreserve.de`
+- **HAN7 - 15560496**: `!QTtFDZBwpWSnJwyYTn:matrix.windreserve.de`
+- **HAN8 - 15560495**: `!xHRcTmceWveHmOziqx:matrix.windreserve.de`
+- **HAN9 - 15560492**: `!ltqpPAWEoHTIrsiQzF:matrix.windreserve.de`
 
 ---
 
@@ -157,8 +160,7 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!RdkRFxfTUKMQxMTLTl:matrix.windreserve.de`
-
-> Note: Turbine rooms not yet linked to space
+- **OSL - 62606**: `!SlGxGOBEzPUpqVZSnN:matrix.windreserve.de`
 
 ---
 
@@ -183,8 +185,6 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!NsNRqNISHAewdfSdHx:matrix.windreserve.de`
-
-> Note: Turbine rooms not yet linked to space
 
 ---
 
@@ -225,8 +225,8 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!IVfOqrGEocaOgArctk:matrix.windreserve.de`
-- **TA1 - 1000-413-01**: (existing turbine room)
-- **TA2 - 1000-403-02**: (existing turbine room)
+- **TA1 - 1000-413-01**: `!GyEFysZHkYeyAXvTwr:matrix.windreserve.de`
+- **TA2 - 1000-403-02**: `!gzWoiHBHifbvsxtUfp:matrix.windreserve.de`
 
 ---
 
@@ -277,8 +277,6 @@ Generated: 2026-04-11
 ### Rooms
 
 - **Anlagenzugang | Wind Farm Access**: `!hIipzdWQdYoBaLPPtJ:matrix.windreserve.de`
-
-> Note: Turbine rooms not yet linked to space
 
 ---
 
