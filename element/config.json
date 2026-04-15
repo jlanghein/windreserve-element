@@ -25,5 +25,8 @@
     },
     "jitsi": {
         "preferred_domain": "meet.element.io"
+    },
+    "min_browser_version": {
+        "brave": false
     }
 }

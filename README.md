@@ -26,9 +26,15 @@ Self-hosted Matrix (Synapse) + Element setup for WindReserve internal communicat
 
 ## Domains
 
-- `element-new.windreserve.de` - Element web client
-- `matrix-new.windreserve.de` - Synapse homeserver API
+- `element.windreserve.de` - Element web client (v1.12.15)
+- `matrix.windreserve.de` - Synapse homeserver API (v1.151.0)
 - `turn.windreserve.de` - TURN server for voice/video
+
+## Security
+
+- **Authenticated media**: Media downloads require authentication (Matrix v1.11+)
+- **No federation**: Internal use only, federation disabled
+- **HTTPS only**: All traffic encrypted via Caddy auto-TLS
 
 ## Quick Start
 

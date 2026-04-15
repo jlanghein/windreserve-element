@@ -3,7 +3,7 @@
 
 set -e
 
-ELEMENT_VERSION="${1:-v1.11.59}"
+ELEMENT_VERSION="${1:-v1.12.15}"
 ELEMENT_DIR="./element"
 
 echo "Downloading Element Web ${ELEMENT_VERSION}..."

@@ -26,6 +26,11 @@ database:
 
 log_config: "/data/log.config"
 media_store_path: /data/media_store
+
+# Authenticated media downloads (Matrix v1.11+)
+# Requires Element Web 1.12+ for proper support
+# Media can only be downloaded with valid access token
+enable_authenticated_media: true
 signing_key_path: "/data/keys/signing.key"
 trusted_key_servers:
   - server_name: "matrix.org"
