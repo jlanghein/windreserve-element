@@ -9,6 +9,7 @@
 # 4. Adds user to WR space and rooms (except IT Crew)
 # 5. Saves password to element-secrets.env
 # 6. Updates profile via client API to propagate displayname
+# 7. Saves credentials to Bitwarden (WindReserve org, Büro intern + IT collections)
 
 set -e
 
@@ -31,6 +32,9 @@ source "$SCRIPT_DIR/../secrets.env"
 # Read admin credentials from element-secrets.env
 SYNAPSE_ADMIN_USER=$(grep '^SYNAPSE_ADMIN_USER=' "$SCRIPT_DIR/../element-secrets.env" | cut -d'=' -f2)
 SYNAPSE_ADMIN_PASS=$(grep '^SYNAPSE_ADMIN_PASS=' "$SCRIPT_DIR/../element-secrets.env" | cut -d'=' -f2)
+
+# Bitwarden CLI path
+BW_CLI="${BW_CLI:-$HOME/.local/bin/bw}"
 
 echo "=== Onboarding user: $USERNAME ($DISPLAY_NAME) ==="
 echo ""
@@ -288,3 +292,81 @@ echo "  - All wind farm spaces and rooms"
 echo ""
 echo "Note: Some rooms may have failed if synapse-admin is not a member."
 echo "Security key is set to PLACEHOLDER - update after user sets up E2EE."
+
+# Step 7: Save to Bitwarden
+echo ""
+echo "Step 7: Saving credentials to Bitwarden..."
+
+# Store username in a different variable to avoid conflict with system USERNAME
+MATRIX_USER="$1"
+
+if [ -x "$BW_CLI" ] && [ -n "$BW_CLIENTID" ] && [ -n "$BW_CLIENTSECRET" ] && [ -n "$BW_MASTER_PASSWORD" ]; then
+    # Check if already logged in
+    BW_STATUS=$("$BW_CLI" status 2>/dev/null | jq -r '.status' || echo "unauthenticated")
+    
+    if [ "$BW_STATUS" = "unauthenticated" ]; then
+        echo "  Logging into Bitwarden..."
+        export BW_CLIENTID BW_CLIENTSECRET
+        "$BW_CLI" login --apikey --quiet 2>/dev/null || true
+    fi
+    
+    # Unlock vault
+    echo "  Unlocking vault..."
+    export BW_SESSION=$("$BW_CLI" unlock "$BW_MASTER_PASSWORD" --raw 2>/dev/null)
+    
+    if [ -n "$BW_SESSION" ]; then
+        # Sync vault
+        "$BW_CLI" sync --session "$BW_SESSION" --quiet 2>/dev/null || true
+        
+        # Check if entry already exists
+        EXISTING=$("$BW_CLI" list items --search "Element - $DISPLAY_NAME" --session "$BW_SESSION" 2>/dev/null | jq -r '.[0].id // empty')
+        
+        if [ -n "$EXISTING" ]; then
+            echo "  Entry already exists in Bitwarden (ID: $EXISTING), skipping..."
+        else
+            # Create entry JSON using jq for proper encoding
+            TODAY=$(date +%Y-%m-%d)
+            BW_ITEM=$(jq -n \
+                --arg org "$BW_ORG_ID" \
+                --arg col1 "$BW_COLLECTION_BUERO_INTERN" \
+                --arg col2 "$BW_COLLECTION_IT" \
+                --arg name "Element - $DISPLAY_NAME" \
+                --arg notes "Element/Matrix account for $DISPLAY_NAME - Username: $MATRIX_USER - Created: $TODAY" \
+                --arg user "$MATRIX_USER" \
+                --arg pass "$PASSWORD" \
+                '{
+                    organizationId: $org,
+                    collectionIds: [$col1, $col2],
+                    type: 1,
+                    name: $name,
+                    notes: $notes,
+                    login: {
+                        uris: [{uri: "https://element.windreserve.de"}],
+                        username: $user,
+                        password: $pass
+                    },
+                    fields: [
+                        {name: "Matrix Security Key", value: "PLACEHOLDER", type: 1}
+                    ]
+                }')
+            
+            # Create entry
+            RESULT=$("$BW_CLI" create item --session "$BW_SESSION" "$(echo "$BW_ITEM" | base64 -w 0)" 2>&1)
+            BW_ITEM_ID=$(echo "$RESULT" | jq -r '.id // "FAILED"')
+            
+            if [ "$BW_ITEM_ID" != "FAILED" ]; then
+                echo "  Created Bitwarden entry: $BW_ITEM_ID"
+            else
+                echo "  Warning: Failed to create Bitwarden entry"
+            fi
+        fi
+    else
+        echo "  Warning: Could not unlock Bitwarden vault"
+    fi
+else
+    echo "  Skipping Bitwarden (CLI not configured or not installed)"
+    echo "  To enable: install bw CLI and set BW_* variables in secrets.env"
+fi
+
+echo ""
+echo "=== Onboarding finished! ==="
