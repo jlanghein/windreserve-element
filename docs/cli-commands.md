@@ -6,6 +6,27 @@ Quick reference for common administrative tasks on the Matrix/Synapse server.
 
 Helper scripts are available in the `scripts/` directory. Run from the project root.
 
+### VPN Report
+
+Generates a professional Excel spreadsheet report of all WireGuard VPN clients and users from wg-portal.
+
+```bash
+./scripts/vpn-report.sh [output-file]
+
+# Examples
+./scripts/vpn-report.sh                     # Creates vpn-report.xlsx
+./scripts/vpn-report.sh vpn-audit-2026.xlsx # Custom filename
+./scripts/vpn-report.sh --json report.xlsx  # Also export as JSON
+```
+
+The report includes:
+- **Dashboard**: Summary statistics, peer counts by VPN type, top users by peer count
+- **VPN Clients**: All peers with display name, user, IP address, VPN interface, status
+- **Users**: All wg-portal users with admin status, peer count, account status
+- **Summary by User**: Aggregated peer counts per user
+
+Requirements: `uvx`, `sshpass`, SSH access to `caddy.helium` (10.24.0.29)
+
 ### Create Wind Farm Space
 
 Creates a wind farm space with turbine rooms and auto-joins all users.

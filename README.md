@@ -71,6 +71,7 @@ See [docs/migration.md](docs/migration.md) for migrating from the old oxygen-bas
 ├── coturn/
 │   └── turnserver.conf    # TURN server config
 ├── scripts/               # CLI management scripts
+│   ├── vpn-report.sh             # Generate VPN clients/users report
 │   ├── create-wind-farm-space.sh  # Create space with turbine rooms
 │   ├── rename-room.sh             # Rename a room
 │   ├── delete-room.sh             # Delete a room
